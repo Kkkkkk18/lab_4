@@ -16,7 +16,6 @@ const int kMinimalLength = 30;
 const int kMinimalLength_2 = kMinimalLength*kMinimalLength;
 const float eps = 0.001f;
 
-// Главная функция программы
 int main(int argc, char ** argv) {
   if (argc < 3) {
     std::cout << "Usage: lab.exe <graph.in> <graph.bmp>\n";
@@ -25,24 +24,23 @@ int main(int argc, char ** argv) {
 
   std::ifstream in(argv[1]);
   if (in) {
-    int V, E; // Число вершин и ребер
+    int V, E; // С‡РёСЃР»Рѕ РІРµСЂС€РёРЅ Рё СЂРµР±РµСЂ
 
     in >> V >> E;
 
-    std::vector<std::vector<int>> edges(V); // Ребра
-    std::vector<float> vertice_x(V); // Горизонтальные координаты вершин
-    std::vector<float> vertice_y(V); // Вертикальные координаты вершин
-    std::vector<int> pows(V); // Степени вершин
-    std::vector<std::vector<float>> distance_x(V); // Расстояния по x
-    std::vector<std::vector<float>> distance_y(V); // Расстояния по y
-    std::vector<std::vector<float>> r2(V); // Квадраты расстояний
-    std::vector<float> force_x(V); // Горизонтальные силы
-    std::vector<float> force_y(V); // Вертикальные силы
-    std::vector<float> old_force_x(V); // Предыдущие горизонтальные силы
-    std::vector<float> old_force_y(V); // Предыдущие вертикальные силы
-
-    for (int i = 0; i < E; i++) { // Цикл чтения ребер
-      int u, v; // Номера вершин
+    std::vector<std::vector<int>> edges(V); // СЂРµР±СЂР°
+    std::vector<float> vertice_x(V); // РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ
+    std::vector<float> vertice_y(V); // РІРµСЂС‚РёРєР°Р»СЊРЅС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РІРµСЂС€РёРЅ
+    std::vector<int> pows(V); // СЃС‚РµРїРµРЅРё РІРµСЂС€РёРЅ
+    std::vector<std::vector<float>> distance_x(V); // СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РїРѕ x
+    std::vector<std::vector<float>> distance_y(V); // СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РїРѕ y
+    std::vector<std::vector<float>> r2(V); // РєРІР°РґСЂР°С‚С‹ СЂР°СЃСЃС‚РѕСЏРЅРёР№
+    std::vector<float> force_x(V); // РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Рµ СЃРёР»С‹
+    std::vector<float> force_y(V); // РІРµСЂС‚РёРєР°Р»СЊРЅС‹Рµ СЃРёР»С‹
+    std::vector<float> old_force_x(V); // РїСЂРµРґС‹РґСѓС‰РёРµ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС‹Рµ СЃРёР»С‹
+    std::vector<float> old_force_y(V); // РїСЂРµРґС‹РґСѓС‰РёРµ РІРµСЂС‚РёРєР°Р»СЊРЅС‹Рµ СЃРёР»С‹
+    for (int i = 0; i < E; i++) { // С†РёРєР» С‡С‚РµРЅРёСЏ СЂРµР±РµСЂ
+      int u, v; // РЅРѕРјРµСЂР° РІРµСЂС€РёРЅ
       in >> u >> v;
       edges[u].push_back(v);
       pows[u]++;
@@ -56,7 +54,7 @@ int main(int argc, char ** argv) {
         max_pow = pows[i];
 
     std::srand(std::time(0));
-    for (int i = 0; i < V; i++) { // Цикл начального заполнения координат
+    for (int i = 0; i < V; i++) { // С†РёРєР» РЅР°С‡Р°Р»СЊРЅРѕРіРѕ Р·Р°РїРѕР»РЅРµРЅРёСЏ РєРѕРѕСЂРґРёРЅР°С‚
       float angle = 2.0*3.14159265358*std::rand()/RAND_MAX;
       vertice_x[i] = (5.0 + V*(1.0-1.0*pows[i]/max_pow)*cos(angle));
       vertice_y[i] = (5.0 + V*(1.0-1.0*pows[i]/max_pow)*sin(angle));
@@ -69,8 +67,8 @@ int main(int argc, char ** argv) {
     float max_fy = 0.0f;
     bool oscillating = false;
     int iterations = (int)(200*sqrt(V));
-    do { // Цикл размещения вершин
-      // Вычисление расстояний
+    do { // С†РёРєР» СЂР°Р·РјРµС‰РµРЅРёСЏ РІРµСЂС€РёРЅ
+      // РІС‹С‡РёСЃР»РµРЅРёРµ СЂР°СЃСЃС‚РѕСЏРЅРёР№
       for (int i = 0; i < V; i++) {
         force_x[i] = 0.0f;
         force_y[i] = 0.0f;
@@ -84,7 +82,7 @@ int main(int argc, char ** argv) {
           r2[i][j] = r2[j][i] = dx*dx + dy*dy;
         }
       }
-      // Вычисляем влияние ребер
+      // РІС‹С‡РёСЃР»РµРЅРёРµ РІР»РёСЏРЅРёСЏ СЂРµР±РµСЂ
       for (int i = 0; i < V; i++) {
         int adjacents = edges[i].size();
         for (int j = 0; j < adjacents; j++) {
@@ -108,7 +106,7 @@ int main(int argc, char ** argv) {
           force_y[v] -= dy;
         }
       }
-      // Вычисление отталкиваний вершин
+      // РІС‹С‡РёСЃР»РµРЅРёРµ РѕС‚С‚Р°Р»РєРёРІР°РЅРёР№ РІРµСЂС€РёРЅ
       for (int i = 0; i < V; i++) {
         for (int j = 0; j < i; j++) {
           float dx, dy;
@@ -125,7 +123,7 @@ int main(int argc, char ** argv) {
       }
       max_fx = 0.0f;
       max_fy = 0.0f;
-      // Делаем шаг
+    
       for (int i = 0; i < V; i++) {
         float fx = force_x[i];
         float fy = force_y[i];
@@ -149,12 +147,12 @@ int main(int argc, char ** argv) {
       if ((iterations % 10) == 0)
         std::cout << "Iterations rest: " << iterations << std::endl;
     } while ((--iterations) && !oscillating && max_fx + max_fy > eps);
-    // Отрисовка
+    // РѕС‚СЂРёСЃРѕРІРєР°
     float min_x = 1E10;
     float max_x = -1E10;
     float min_y = 1E10;
     float max_y = -1E10;
-    for (int i = 0; i < V; i++) { // Находим границы изображения
+    for (int i = 0; i < V; i++) { // РЅР°С…РѕРґРёРј РіСЂР°РЅРёС†С‹ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
       float x = vertice_x[i];
       float y = vertice_y[i];
       if (x < min_x)
@@ -175,7 +173,7 @@ int main(int argc, char ** argv) {
 
     LONG image_size = size_y * ((size_x * 3 + 3) & 0xFFFFFFFC);
 
-    char * bits = new char[image_size]; // Выделяем память под изображение
+    char * bits = new char[image_size]; // РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ РїРѕРґ РёР·РѕР±СЂР°Р¶РµРЅРёРµ
     for (int p = 0; p < image_size; p++)
         bits[p] = 0;
 
@@ -194,7 +192,7 @@ int main(int argc, char ** argv) {
       OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, 
       DEFAULT_PITCH | FF_DONTCARE, TEXT("Tahoma"));
     SelectObject(hdc, hfont);
-    // Рисуем вершины
+    // СЂРёСЃСѓРµРј РІРµСЂС€РёРЅС‹
     for (int i = 0; i < V; i++) {
       char buf[20];
       int cx = (int)(vertice_x[i] - min_x);
@@ -203,7 +201,7 @@ int main(int argc, char ** argv) {
       sprintf_s(buf, "%i", i);
       TextOutA(hdc, cx + 4, cy + 4, buf, strlen(buf));
     }
-    // Рисуем ребра
+    // СЂРёСЃСѓРµРј СЂРµР±СЂР°
     for (int i = 0; i < V; i++) {
       int adjacents = edges[i].size();
       for (int j = 0; j < adjacents; j++) {
@@ -213,7 +211,7 @@ int main(int argc, char ** argv) {
         LineTo(hdc, (int)(vertice_x[v] - min_x), (int)(vertice_y[v] - min_y));
       }
     }
-    // Заполняем структуры для сохранения BMP-файла
+    // Р·Р°РїРѕР»РЅСЏРµРј СЃС‚СЂСѓРєС‚СѓСЂС‹ РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ BMP-С„Р°Р№Р»Р°
     BITMAPINFOHEADER BMIH;
 
     BMIH.biSize = sizeof(BITMAPINFOHEADER);
@@ -236,7 +234,7 @@ int main(int argc, char ** argv) {
     bmfh.bfReserved1 = bmfh.bfReserved2 = 0;
 
     std::ofstream out(argv[2], std::ios::binary | std::ios::out |std::ios::trunc);
-    if (out) { // Сохраняем bmp-файл
+    if (out) { // СЃРѕС…СЂР°РЅСЏРµРј bmp-С„Р°Р№Р»
       out.write((const char *)&bmfh, sizeof(BITMAPFILEHEADER));
       out.write((const char *)&BMIH, sizeof(BITMAPINFOHEADER));
 
